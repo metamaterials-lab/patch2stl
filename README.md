@@ -4,30 +4,34 @@ This function generates an stl file from Matlab variables X, Y, and Z that defin
 In addition, some intermediate functions are available to allow the user to customize an algorithm 
 for cases not considered in this repository.
 
-The basic idea of this function is that the surface is defined by a grid of points defined by the variables X, Y, and Z. 
-Then each set of four neighbouring grid points that define a squared to approximate the surface is divided into two
-triangles. 
+The basic idea of this function is that the surface is defined by a grid of points represented by  
+variables X, Y, and Z. Z must be a matrix with a square grid of points, while X and Y may be scalars, 
+vectors, or matrices. Then, each set of four neighbouring points in the square grid (i.e., four vertices
+of a square) that approximate the surface is divided into two triangles. 
 
 ## Usage
 
+First, download or clone the patch2stl folder in your computer. Then, add the folder into Matlab's path
+by going to Home, clicking in "Set Path", and then in "Add Folder ...". In the dialog box go to and 
+select the patch2stl folder.
 
 The general usage is:
 
 ```Matlab
-PATCH2STL('filename',X,Y,Z) 
+patch2stl('filename',X,Y,Z) 
 ```
-When X and Y and are matrices the same size of Z, then a point in the surface patch is given by [X(i,j) Y(i,j) Z(i,j)], 
-where 1 <= i <= m and 1 <= j <= n and [m,n] = size(Z). 
+When X and Y and are matrices the same size of Z, then a point in the surface patch is given by 
+[X(i,j) Y(i,j) Z(i,j)], where 1 <= i <= m and 1 <= j <= n and [m,n] = size(Z). 
 
 When X and Y are vectors, they must have length(x) = n and length(y) = m, where [m,n] = size(Z). 
 Note that x corresponds to the columns of Z and y corresponds to the rows.
 
-Whan X and Y are scalars, then they indicate the x and y spacing between grid points.
+When X and Y are scalars, then they indicate the x and y spacing between grid points.
 
 The stl file may be written in ascii or binary format using: 
 
 ```Matlab
-PATCH2STL(...,mode)
+patch2stl(...,mode)
 ```
 where the value of `mode` may be one of the following:
 
@@ -36,4 +40,40 @@ where the value of `mode` may be one of the following:
 
 By default, if `mode` is ommited, the stl is written in binary format. 
 
+## Customizing a function to write an stl
+
+Intermediate function are available in the same folder (patch2stl). This allows the user to create
+custonmized versions of an stl converter. 
+To do so, jus follow the following template
+
+```Matlab
+
+% This function opens a file with a given filename and format (mode)
+fid = patch2stl_openfile(filename, mode);
+
+% This function generates the initial lines on the stl file
+patch2stl_header(filename, fid, mode)
+
+% Insert here the code where each triangle in the stl file is generated 
+% and/or saved in the stl file
+%
+% First, initialize a variable to store the number of tirangles (or facets) 
+% in the st file: 
+% nfacets = 0;
+%
+% Then, for every three triangle vertices (p1, p2, p3) with normal vector n
+% use the following line:
+% nfacets = nfacets + patch2stl_facet_wr(fid, p1, p2, p3, n, mode);
+%
+% Function patch2stl_facet_wr writes a single triangle into the stl file. 
+% The output of function patch2stl_facet_wr is 1 if the triangle was succesfully
+% written, or 0 other wise. This is why its output is accumulated into variable
+% nfacets. 
+% The total number of tirangles (or facets) is needed when writing the ending 
+% lines of the stl file.
+
+% This function generates the ending lines on the stl file and closes the file
+% NOTE: It is necessary to update the fid variable for Matlab to close the file
+fid = patch2stl_footer(fid, nfacets, mode);
+```
 
