@@ -46,13 +46,13 @@ By default, if `mode` is ommited, the stl is written in binary format.
 ## Customizing a function to write an stl
 
 Intermediate function are available in the same folder (patch2stl). This allows the user to create
-custonmized versions of an stl converter. This is useful if the user already knows or can calculate
+customized versions of an stl converter. This is useful if the user already knows or can calculate
 the vertices of each triangle in a surface patch. 
-To do so, jus follow the following template
+To do so, just follow this template:
 
 ```Matlab
 
-% This function opens a file with a given filename and format (mode)
+% This function opens a file with a given filename and file format (mode)
 fid = patch2stl_openfile(filename, mode);
 
 % This function generates the initial lines on the stl file
@@ -63,17 +63,17 @@ patch2stl_header(filename, fid, mode)
 %
 % First, initialize a variable to store the number of tirangles (or facets) 
 % in the st file: 
-% nfacets = 0;
-%
-% Then, for every three triangle vertices (p1, p2, p3) with normal vector n
+nfacets = 0;
+
+% Then, for every set of triangle vertices (p1, p2, p3) with normal vector n
 % use the following line:
-% nfacets = nfacets + patch2stl_facet_wr(fid, p1, p2, p3, n, mode);
+nfacets = nfacets + patch2stl_facet_wr(fid, p1, p2, p3, n, mode);
 %
 % Function patch2stl_facet_wr writes a single triangle into the stl file. 
 % The output of function patch2stl_facet_wr is 1 if the triangle was succesfully
 % written, or 0 other wise. This is why its output is accumulated into variable
 % nfacets. 
-% The total number of tirangles (or facets) is needed when writing the ending 
+% The total number of triangles (or facets) is needed when writing the ending 
 % lines of the stl file.
 
 % This function generates the ending lines on the stl file and closes the file
