@@ -9,6 +9,8 @@ variables X, Y, and Z. Z must be a matrix with a square grid of points, while X 
 vectors, or matrices. Then, each set of four neighbouring points in the square grid (i.e., four vertices
 of a square) that approximate the surface is divided into two triangles. 
 
+This function is based upon `surf2stl` developed by McDonald (2004). 
+
 ## Usage
 
 First, download or clone the patch2stl folder in your computer. Then, add the folder into Matlab's path
@@ -36,6 +38,7 @@ patch2stl(...,mode)
 where the value of `mode` may be one of the following:
 
 'binary' - writes in STL binary format (default)
+
 'ascii'  - writes in STL ASCII format
 
 By default, if `mode` is ommited, the stl is written in binary format. 
@@ -43,7 +46,8 @@ By default, if `mode` is ommited, the stl is written in binary format.
 ## Customizing a function to write an stl
 
 Intermediate function are available in the same folder (patch2stl). This allows the user to create
-custonmized versions of an stl converter. 
+custonmized versions of an stl converter. This is useful if the user already knows or can calculate
+the vertices of each triangle in a surface patch. 
 To do so, jus follow the following template
 
 ```Matlab
@@ -77,3 +81,6 @@ patch2stl_header(filename, fid, mode)
 fid = patch2stl_footer(fid, nfacets, mode);
 ```
 
+## References
+
+Bill McDonald (2004). surf2stl (https://www.mathworks.com/matlabcentral/fileexchange/4512-surf2stl), MATLAB Central File Exchange. Retrieved July 18, 2024. 
